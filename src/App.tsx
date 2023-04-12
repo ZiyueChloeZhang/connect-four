@@ -6,6 +6,8 @@ import './sass/main.scss'
 import { Dialog } from '@headlessui/react'
 import RuleDialog from './components/RuleDialog/RuleDialog';
 import MainMenu from './components/MainMenu/MainMenu';
+import MainPage from './MainPage';
+import PauseDialog from './components/PauseDialog/PauseDialog';
 
 type GameState = 'IDLE' | 'IN_GAME' | 'PAUSED';
 
@@ -49,12 +51,21 @@ function App() {
       <div className="App">
         <div>current state: <b>{gameState}</b></div>
         <div>isRulesOpen: <b>{isRulesOpen ? `true` : 'false'}</b></div>
-        <MainMenu
-          startGame={() => { dispatch({ type: 'START' }) }}
-          openRules={() => { setIsRulesOpen(true) }}
-        />
+        {(gameState === 'IDLE') ? (
+          <MainMenu
+            startGame={() => { dispatch({ type: 'START' }) }}
+            openRules={() => { setIsRulesOpen(true) }} />
+        ) : (
+          <MainPage pause={() => dispatch({ type: 'PAUSE' })} restart={() => dispatch({ type: 'RESTART' })} />
+        )
+        }
       </div>
       <RuleDialog isOpen={isRulesOpen} closeDialog={() => setIsRulesOpen(false)} />
+      <PauseDialog
+        isOpen={gameState === 'PAUSED'}
+        continueGame={() => dispatch({ type: 'CONTINUE' })}
+        quit={() => dispatch({ type: 'QUIT' })}
+        restart={() => dispatch({ type: 'RESTART' })} />
     </>
   )
 }
