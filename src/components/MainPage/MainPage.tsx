@@ -18,14 +18,14 @@ const MainPage: React.FC<MainPageProps> = ({ pause, restart }) => {
             </nav>
             <div className='score-boards'>
                 <div className='score-board'>
-                    <div className='score-info score-info-1'>
+                    <div className='score-info'>
                         <div className='player-name'>player 1</div>
                         <div className='score'>12</div>
                     </div>
                     <img src={playerOneIcon} alt="player one icon" id='player-one-icon' />
                 </div>
                 <div className='score-board'>
-                    <div className='score-info score-info-2'>
+                    <div className='score-info'>
                         <div className='player-name'>player 2</div>
                         <div className='score'>23</div>
                     </div>
