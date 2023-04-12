@@ -1,0 +1,104 @@
+@import "../../sass/_typography";
+@import "../../sass/_mixins";
+@import "../../sass/_variables";
+
+#main-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 50px 20px;
+  gap: 50px;
+
+  @include md {
+    margin: 30px 68px;
+    background: $purple-light;
+  }
+
+  nav {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+
+    button {
+      @include heading-xs;
+    }
+
+    #logo {
+      position: absolute;
+      width: 40px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+
+      @include md {
+        width: 52px;
+      }
+    }
+  }
+
+  .score-boards {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
+    @include md {
+      gap: 40px;
+    }
+    margin: 0 20px;
+
+    .score-board {
+      @include border-shadow;
+      padding: 10px;
+      background-color: $white;
+      position: relative;
+      width: 100%;
+
+      .score-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        @include md {
+          &.score-info-1 {
+            flex-direction: row;
+          }
+          &.score-info-2 {
+            flex-direction: row-reverse;
+          }
+          justify-content: space-around;
+        }
+
+        .player-name {
+          @include heading-xs;
+
+          @include md {
+            @include heading-s;
+          }
+        }
+
+        .score {
+          font-weight: 700;
+          font-size: 32px;
+          line-height: 41px;
+
+          @include md {
+            @include heading-l;
+          }
+        }
+      }
+
+      #player-one-icon {
+        position: absolute;
+        left: -35px;
+        top: 15px;
+      }
+      #player-two-icon {
+        position: absolute;
+        right: -35px;
+        top: 15px;
+      }
+    }
+  }
+}

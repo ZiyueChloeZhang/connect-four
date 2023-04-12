@@ -3,6 +3,7 @@
 @use "../components/RuleDialog/RuleDialog.scss";
 @use "../components/PauseDialog/PauseDialog.scss";
 @use "../components/MainMenu/MainMenu.scss";
+@use "../components/MainPage/MainPage.scss";
 @import "_variables";
 
 /* http://meyerweb.com/eric/tools/css/reset/ 
@@ -142,11 +143,7 @@ body,
   min-height: 100vh;
   min-width: 375px;
   display: flex;
-  flex-direction: column; //TODO
+  flex-direction: column;
   min-height: 100vh;
   background-color: $purple-light;
-
-  @include md {
-    background-color: $purple-dark;
-  }
 }

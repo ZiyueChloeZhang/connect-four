@@ -6,7 +6,7 @@ import './sass/main.scss'
 import { Dialog } from '@headlessui/react'
 import RuleDialog from './components/RuleDialog/RuleDialog';
 import MainMenu from './components/MainMenu/MainMenu';
-import MainPage from './MainPage';
+import MainPage from './components/MainPage/MainPage';
 import PauseDialog from './components/PauseDialog/PauseDialog';
 
 type GameState = 'IDLE' | 'IN_GAME' | 'PAUSED';
@@ -42,15 +42,13 @@ function gameStateReducer(gameState: GameState, action: GameStateAction): GameSt
 
 
 function App() {
-  const initialGameState: GameState = 'IDLE';
+  const initialGameState: GameState = 'IN_GAME';
   const [gameState, dispatch] = useReducer(gameStateReducer, initialGameState);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
 
   return (
     <>
       <div className="App">
-        <div>current state: <b>{gameState}</b></div>
-        <div>isRulesOpen: <b>{isRulesOpen ? `true` : 'false'}</b></div>
         {(gameState === 'IDLE') ? (
           <MainMenu
             startGame={() => { dispatch({ type: 'START' }) }}
