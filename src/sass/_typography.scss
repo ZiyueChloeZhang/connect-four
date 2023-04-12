@@ -1,9 +1,9 @@
 :root {
-  font-family: "Space Grotesk";
+  font-family: "Space Grotesk", sans-serif;
   font-style: normal;
 }
 
-@mixin body {
+@mixin p-normal {
   font-weight: 500;
   font-size: 16px;
   line-height: 20px;
