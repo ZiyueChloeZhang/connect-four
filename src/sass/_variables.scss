@@ -1,0 +1,30 @@
+// Colors
+$black: #000000;
+$purple-dark: #5c2dd5;
+$purple-light: #7945ff;
+$pink: #fd6687;
+$yellow: #ffce67;
+$white: #ffffff;
+
+// Screen sizes
+$screen-sm: 576px;
+$screen-md: 768px;
+$screen-lg: 992px;
+
+@mixin sm {
+  @media (min-width: #{$screen-sm}) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (min-width: #{$screen-md}) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (min-width: #{$screen-lg-min}) {
+    @content;
+  }
+}

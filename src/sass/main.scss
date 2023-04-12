@@ -1,0 +1,39 @@
+@use "components/_buttons";
+@use "components/_menus";
+@import "_variables";
+
+body {
+  all: none;
+  margin: 0;
+  width: 100%;
+  min-height: 100vh;
+  min-width: 375px;
+}
+
+.App {
+  display: flex;
+  min-height: 100vh;
+  background-color: $purple-light;
+
+  @include md {
+    background-color: $purple-dark;
+  }
+}
+
+#logo {
+  max-width: 58px;
+}
+
+.main-menu {
+  > img {
+    padding: 30px;
+    margin-bottom: 50px;
+  }
+
+  div:has(> button) {
+    display: flex;
+    flex-direction: column;
+    width: inherit;
+    gap: 30px;
+  }
+}
