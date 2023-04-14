@@ -18,4 +18,8 @@ body {
   @include md {
     margin: 30px 68px;
   }
+
+  @include lg {
+    margin: 40px auto;
+  }
 }
