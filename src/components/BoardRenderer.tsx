@@ -1,15 +1,15 @@
 import React from 'react';
-import { BoardCell } from './App';
+import { CellValue } from '../shared/interfaces';
 
 interface BoardRendererProps {
-    board: BoardCell[][];
+    board: CellValue[][];
 }
 
 const BoardRenderer: React.FC<BoardRendererProps> = ({ board }) => {
     const numRows = board.length;
     const numCols = board[0].length;
 
-    const renderCell = (cell: BoardCell) => {
+    const renderCell = (cell: CellValue) => {
         if (cell === 1) {
             return 'X';
         } else if (cell === 2) {
