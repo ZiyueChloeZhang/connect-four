@@ -24,7 +24,7 @@ $screen-lg: 992px;
 }
 
 @mixin lg {
-  @media (min-width: #{$screen-lg-min}) {
+  @media (min-width: #{$screen-lg}) {
     @content;
   }
 }

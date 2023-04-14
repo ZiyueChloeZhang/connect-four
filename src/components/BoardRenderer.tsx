@@ -1,5 +1,5 @@
 import React from 'react';
-import { BoardCell } from '../App';
+import { BoardCell } from './App';
 
 interface BoardRendererProps {
     board: BoardCell[][];

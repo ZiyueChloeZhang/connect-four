@@ -1,9 +1,8 @@
 import { useEffect, useReducer, useState } from 'react'
-import './sass/main.scss'
-import RuleDialog from './components/RuleDialog/RuleDialog';
-import MainMenu from './components/MainMenu/MainMenu';
-import MainPage from './components/MainPage/MainPage';
-import PauseDialog from './components/PauseDialog/PauseDialog';
+import RuleDialog from './RuleDialog/RuleDialog';
+import MainMenu from './MainMenu/MainMenu';
+import MainPage from './MainPage/MainPage';
+import PauseDialog from './PauseDialog/PauseDialog';
 
 type GameState = 'IDLE' | 'IN_GAME' | 'PAUSED';
 
@@ -87,7 +86,7 @@ function inGameStateReducer(inGameState: InGameState, action: InGameStateAction)
 function App() {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
 
-  const initialGameState: GameState = 'IDLE';
+  const initialGameState: GameState = 'IN_GAME';
   const [gameState, dispatchGameState] = useReducer(gameStateReducer, initialGameState);
 
   const initialBoard: BoardCell[][] = Array(7).fill(Array(6).fill(null));

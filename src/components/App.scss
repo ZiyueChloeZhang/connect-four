@@ -1,0 +1,21 @@
+@import "../sass/_typography";
+@import "../sass/_mixins";
+@import "../sass/_variables";
+
+body {
+  background-color: $purple-light;
+}
+
+.App {
+  height: 100dvh;
+  min-width: 375px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+  margin: 50px 0;
+  gap: 50px;
+
+  @include md {
+    margin: 30px 68px;
+  }
+}
