@@ -91,7 +91,13 @@ const MainPage: React.FC<MainPageProps> = ({ pause, restart }) => {
                         <img src={boardLayerWhiteSmall} alt="board layer white" />
                     </picture>
                     <div id='virtual-board'>
-                        {flatten(board).map(({ row, col, value }, index) => (<BoardCell key={index} rowNum={row} colNum={col} cellValue={value} />))}
+                        {board.map((row, colNum) => (
+                            <div key={`column-${colNum}`} className='board-column'>
+                                {row.map((cell, rowNum) => (
+                                    <BoardCell key={`row-${rowNum}`} cellValue={cell} />
+                                ))}
+                            </div>)
+                        )}
                     </div>
                     <picture>
                         <source media="(min-width:768px)" srcSet={boardLayerBlackLarge} />

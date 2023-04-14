@@ -6,14 +6,12 @@ import counterRedSmall from '../../assets/counter-red-small.svg';
 import counterYellowSmall from '../../assets/counter-yellow-small.svg';
 
 type BoardCellProps = {
-    rowNum: RowNum,
-    colNum: ColNum,
     cellValue: CellValue
 }
 
-const BoardCell: React.FC<BoardCellProps> = ({ rowNum, colNum, cellValue }) => {
+const BoardCell: React.FC<BoardCellProps> = ({ cellValue }) => {
     return (
-        <span className='board-cell' data-col={colNum} data-row={rowNum} data-value={0}>
+        <span className='board-cell' data-aria-valuenow={cellValue}>
             {(cellValue === 1) && (
                 <picture>
                     <source media="(min-width:768px)" srcSet={counterRedLarge} />
