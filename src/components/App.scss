@@ -11,15 +11,17 @@ body {
   min-width: 375px;
   display: flex;
   flex-direction: column;
-  padding: 0 20px;
-  margin: 50px 0;
+  box-sizing: border-box;
+  padding: 50px 20px;
   gap: 50px;
 
   @include md {
-    margin: 30px 68px;
+    margin: 30px auto;
+    padding: 0 68px;
   }
 
   @include lg {
-    margin: 40px auto;
+    padding: 40px auto;
+    margin: 0 auto;
   }
 }
