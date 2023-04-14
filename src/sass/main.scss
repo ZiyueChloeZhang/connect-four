@@ -1,10 +1,10 @@
 @use "components/_buttons";
 @use "components/_menus";
-@use "../components/RuleDialog/RuleDialog.scss";
-@use "../components/PauseDialog/PauseDialog.scss";
-@use "../components/MainMenu/MainMenu.scss";
-@use "../components/MainPage/MainPage.scss";
-@use "../components/BoardCell/BoardCell.scss";
+@use "../components/RuleDialog";
+@use "../components/PauseDialog";
+@use "../components/MainMenu";
+@use "../components/MainPage";
+@use "../components/BoardCell";
 @use "../components/App.scss";
 
 /* http://meyerweb.com/eric/tools/css/reset/ 
@@ -93,13 +93,14 @@ time,
 mark,
 audio,
 video {
+  font: inherit;
+  font-size: 100%;
   margin: 0;
   padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
   vertical-align: baseline;
+  border: 0;
 }
+
 /* HTML5 display-role reset for older browsers */
 article,
 aside,
@@ -114,17 +115,21 @@ nav,
 section {
   display: block;
 }
+
 body {
   line-height: 1;
 }
+
 ol,
 ul {
   list-style: none;
 }
+
 blockquote,
 q {
   quotes: none;
 }
+
 blockquote:before,
 blockquote:after,
 q:before,
@@ -132,7 +137,8 @@ q:after {
   content: "";
   content: none;
 }
+
 table {
-  border-collapse: collapse;
   border-spacing: 0;
+  border-collapse: collapse;
 }

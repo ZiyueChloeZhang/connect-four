@@ -1,11 +1,11 @@
-@import "../../sass/_typography";
-@import "../../sass/variables";
+@import "../sass/typography";
+@import "../sass/variables";
 
 #rule-dialog {
   position: fixed;
-  inset: 0;
   height: fit-content;
   background-color: $white;
+  inset: 0;
 
   h1 {
     @include heading-l;
@@ -14,22 +14,22 @@
 
   h2 {
     @include heading-m;
-    color: $purple-light;
     margin-bottom: 12px;
+    color: $purple-light;
   }
 
   div:has(> section) {
     display: flex;
     flex-direction: column;
-    gap: 30px;
     margin-bottom: 10px;
+    gap: 30px;
   }
 
   ol {
-    list-style-type: decimal;
-    list-style-position: inside;
     display: flex;
     flex-direction: column;
+    list-style-position: inside;
+    list-style-type: decimal;
     gap: 10px;
 
     li {
@@ -37,14 +37,14 @@
     }
   }
 
-  button {
-    border-radius: 100%;
-    padding: 0;
+  img[role="button"] {
     position: absolute;
-    bottom: calc(height/2);
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 50%;
+    transform: translate(-50%, 50%);
+    inset: auto 50% 0 50%;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   @include p-normal;

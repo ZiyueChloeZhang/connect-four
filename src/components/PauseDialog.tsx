@@ -1,7 +1,4 @@
-import PropTypes from 'prop-types'
-import { useState } from 'react'
-import { Dialog } from '@headlessui/react'
-import checkIcon from '../../assets/icon-check.svg';
+import {Dialog} from '@headlessui/react'
 
 type PauseDialogProps = {
     isOpen: boolean,
@@ -10,7 +7,7 @@ type PauseDialogProps = {
     quit: () => void
 }
 
-const PauseDialog: React.FC<PauseDialogProps> = ({ isOpen, continueGame, restart, quit }) => {
+const PauseDialog: React.FC<PauseDialogProps> = ({isOpen, continueGame, restart, quit}) => {
     return (
         <Dialog open={isOpen} onClose={continueGame}>
             <Dialog.Panel className='menu-container' id='pause-dialog'>
@@ -20,8 +17,8 @@ const PauseDialog: React.FC<PauseDialogProps> = ({ isOpen, continueGame, restart
                     <button onClick={restart}>restart</button>
                     <button className="pinkBtn" onClick={quit}>quit game</button>
                 </div>
-            </Dialog.Panel >
-        </Dialog >
+            </Dialog.Panel>
+        </Dialog>
     )
 }
 

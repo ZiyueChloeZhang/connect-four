@@ -1,0 +1,196 @@
+@import "../sass/typography";
+@import "../sass/mixins";
+@import "../sass/variables";
+
+body nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  @include lg {
+    align-self: center;
+    max-width: 632px;
+  }
+}
+
+nav > button {
+  @include heading-xs;
+}
+
+nav > #logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  transform: translate(-50%, -50%);
+
+  @include md {
+    width: 52px;
+  }
+}
+
+main {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-items: center;
+
+  @include lg {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    gap: 60px;
+  }
+}
+
+.score-board {
+  @include border-shadow;
+  position: relative;
+  width: 100%;
+  max-width: fit-content;
+  padding: 10px 35px;
+  background-color: $white;
+
+  > .score-info {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    @include md {
+      justify-content: space-around;
+      gap: 20px;
+    }
+
+    @include lg {
+      width: fit-content;
+      margin: auto;
+    }
+  }
+
+  .player-name {
+    width: max-content;
+    @include heading-xs;
+
+    @include md {
+      @include heading-s;
+    }
+  }
+
+  .score {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 41px;
+
+    @include md {
+      @include heading-l;
+    }
+  }
+
+  .player-icon {
+    position: absolute;
+    margin: auto;
+  }
+
+  &#one {
+    @include md {
+      padding: 15px 20px 15px 43px;
+
+      > .score-info {
+        flex-direction: row;
+      }
+    }
+
+    .player-icon {
+      transform: translateX(-50%);
+      inset: 0 auto 0 0;
+    }
+  }
+
+  &#two {
+    @include md {
+      padding: 15px 43px 15px 20px;
+
+      > .score-info {
+        flex-direction: row-reverse;
+      }
+    }
+
+    .player-icon {
+      transform: translateX(50%);
+      inset: 0 0 0 auto;
+    }
+  }
+
+  &#one, &#two {
+    @include lg {
+      width: fit-content;
+      padding: 46px 28px 17px 28px;
+      .player-icon {
+        transform: translate(-50%, -50%);
+        inset: 0 50% auto 50%;
+      }
+      > .score-info {
+        flex-direction: column;
+      }
+    }
+  }
+}
+
+#game-board {
+  position: relative;
+  order: 1;
+  width: 335px;
+  height: 310px;
+  grid-column: span 2;
+
+  @include md {
+    width: 632px;
+    height: 584px;
+  }
+
+  @include lg {
+    order: unset;
+  }
+}
+
+#game-board > * {
+  position: absolute;
+}
+
+#game-board > picture:nth-of-type(1) {
+  z-index: 2;
+}
+
+#game-board > div#virtual-board {
+  z-index: 1;
+  display: grid;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 10.62px 10.6px 32px 10.6px;
+
+  grid-template-columns: repeat(7, 1fr);
+
+  @include md {
+    padding: 20px 20px 60px 20px;
+  }
+}
+
+//white panel
+#game-board > div#virtual-board > .board-column {
+  grid-template-rows: repeat(6, 1fr);
+}
+
+:is(.board-column, #game-board > div#virtual-board) {
+  display: grid;
+  gap: 12.72px;
+  @include md {
+    gap: 24px;
+  }
+}
+
+// black panel
+#game-board > picture:nth-of-type(2) {
+  z-index: 0;
+}

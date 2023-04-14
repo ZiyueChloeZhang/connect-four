@@ -1,25 +1,25 @@
-@import "../../sass/_typography";
-@import "../../sass/variables";
+@import "../sass/typography";
+@import "../sass/variables";
 
 #pause-dialog {
   position: fixed;
-  inset: 0;
-  height: fit-content;
   z-index: 999;
+  height: fit-content;
+  inset: 0;
 
   h1 {
     @include heading-l;
-    text-align: center;
-    padding: 30px;
     margin-bottom: 50px;
+    padding: 30px;
+    text-align: center;
     color: white;
   }
 
   div:has(> button) {
     display: flex;
     flex-direction: column;
-    gap: 30px;
     width: 100%;
     text-align: center;
+    gap: 30px;
   }
 }

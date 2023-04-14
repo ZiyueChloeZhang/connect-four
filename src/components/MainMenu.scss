@@ -1,25 +1,25 @@
-@import "../../sass/variables";
+@import "../sass/variables";
 
 #logo {
   max-width: 58px;
 }
 
 #main-menu {
-  border: none;
-  box-shadow: none;
-  border-radius: unset;
   margin: auto 0;
+  border: none;
+  border-radius: unset;
+  box-shadow: none;
 
   @include md {
     margin: auto;
     border: 3px solid $black;
-    box-shadow: 0 10px 0 $black;
     border-radius: 40px;
+    box-shadow: 0 10px 0 $black;
   }
 
   > img {
-    padding: 30px;
     margin-bottom: 50px;
+    padding: 30px;
   }
 
   div:has(> button) {
