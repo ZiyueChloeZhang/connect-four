@@ -7,13 +7,13 @@
 #main-menu {
   border: none;
   box-shadow: none;
-  border-radius: none;
+  border-radius: unset;
   margin: auto 0;
 
   @include md {
     margin: auto;
     border: 3px solid $black;
-    box-shadow: 0px 10px 0px $black;
+    box-shadow: 0 10px 0 $black;
     border-radius: 40px;
   }
 

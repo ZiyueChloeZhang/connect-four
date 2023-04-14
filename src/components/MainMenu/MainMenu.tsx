@@ -1,5 +1,6 @@
 import connectFourLogo from '../../assets/logo.svg';
 import playerVsPlayerIcon from '../../assets/player-vs-player.svg';
+import React from "react";
 
 type MainMenuProps = {
     startGame: () => void

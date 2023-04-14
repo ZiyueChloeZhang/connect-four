@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react'
+import React, { useReducer } from 'react'
 import connectFourLogo from '../../assets/logo.svg';
 import playerOneIcon from '../../assets/player-one.svg';
 import playerTwoIcon from '../../assets/player-two.svg';
