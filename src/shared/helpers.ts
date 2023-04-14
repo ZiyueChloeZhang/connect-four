@@ -1,6 +1,6 @@
-import { BoardCell, PlayerId } from "./interfaces";
+import { CellValue, PlayerId } from "./interfaces";
 
-export function drop(board: BoardCell[][], currentPlayer: PlayerId, columnIndex: number): BoardCell[][] {
+export function drop(board: CellValue[][], currentPlayer: PlayerId, columnIndex: number): CellValue[][] {
     if (columnIndex > 6) {
         console.error(`invalid column number ${columnIndex}`);
         return board;
@@ -27,7 +27,13 @@ export function togglePlayer(currentPlayer: PlayerId): PlayerId {
     return (currentPlayer === 1) ? 2 : 1;
 }
 
-export function renderBoard(board: BoardCell[][]) {
+export function flatten(array: any[][]): { row: number, col: number, value: any }[] {
+    return array.reduce((flattenedArr, col, colIndex) => {
+        return [...flattenedArr, ...col.map((value, rowIndex) => ({ col: colIndex, row: rowIndex, value }))];
+    }, []);
+};
+
+export function renderBoard(board: CellValue[][]) {
     const numRows = board.length;
     const numCols = board[0].length;
     let output = '';

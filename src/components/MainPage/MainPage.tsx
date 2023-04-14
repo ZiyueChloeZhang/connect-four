@@ -4,8 +4,11 @@ import playerOneIcon from '../../assets/player-one.svg';
 import playerTwoIcon from '../../assets/player-two.svg';
 import boardLayerWhiteLarge from '../../assets/board-layer-white-large.svg';
 import boardLayerWhiteSmall from '../../assets/board-layer-white-small.svg';
-import { drop, togglePlayer } from '../../utils/helpers';
-import { PlayerId, PlayerScores, BoardCell } from '../../utils/interfaces';
+import boardLayerBlackLarge from '../../assets/board-layer-black-large.svg';
+import boardLayerBlackSmall from '../../assets/board-layer-black-small.svg';
+import { drop, flatten, togglePlayer } from '../../shared/helpers';
+import { PlayerId, PlayerScores, CellValue, EMPTY_BOARD } from '../../shared/interfaces';
+import BoardCell from '../BoardCell/BoardCell';
 
 type MainPageProps = {
     pause: () => void,
@@ -28,12 +31,11 @@ type InGameState = {
     currentPlayer: PlayerId,
     timer: number,
     playerScores: PlayerScores,
-    board: BoardCell[][]
+    board: CellValue[][]
 }
 
-const initialBoard: BoardCell[][] = Array(7).fill(Array(6).fill(null));
 const initialInGameState: InGameState = {
-    board: initialBoard,
+    board: EMPTY_BOARD,
     currentPlayer: 1,
     playerScores: { "1": 0, "2": 0 },
     timer: 30
@@ -85,6 +87,13 @@ const MainPage: React.FC<MainPageProps> = ({ pause, restart }) => {
                     <picture>
                         <source media="(min-width:768px)" srcSet={boardLayerWhiteLarge} />
                         <img src={boardLayerWhiteSmall} alt="board layer white" />
+                    </picture>
+                    <div id='virtual-board'>
+                        {flatten(EMPTY_BOARD).map(({ row, col, value }, index) => (<BoardCell key={index} rowNum={row} colNum={col} cellValue={value} />))}
+                    </div>
+                    <picture>
+                        <source media="(min-width:768px)" srcSet={boardLayerBlackLarge} />
+                        <img src={boardLayerBlackSmall} alt="board layer white" />
                     </picture>
                 </div>
                 <div className='score-board'>

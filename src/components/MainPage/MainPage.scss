@@ -138,38 +138,48 @@ main {
 #game-board {
   order: 1;
   grid-column: span 2;
+  position: relative;
+  width: 335px;
+  height: 310px;
+
+  @include md {
+    width: 632px;
+    height: 584px;
+  }
 
   @include lg {
     order: unset;
   }
 }
 
-@include lg {
-  #main-page {
-    .score-boards {
-      .score-board {
-        padding: 46px 0 17px 0;
-        max-width: 140px;
-        min-width: 140px;
+#game-board > * {
+  position: absolute;
+}
 
-        .score-info {
-          margin: auto;
-          display: flex;
-          flex-direction: column !important;
-          width: fit-content;
-        }
+#game-board > picture:nth-of-type(1) {
+  z-index: 2;
+}
 
-        #player-one-icon {
-          position: absolute;
-          left: 39px;
-          top: -30px;
-        }
-        #player-two-icon {
-          position: absolute;
-          right: 39px;
-          top: -30px;
-        }
-      }
-    }
+#game-board > div#virtual-board {
+  z-index: 1;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  box-sizing: border-box;
+  span {
+    display: block;
   }
+  padding: 10.62px 10.6px 32px 10.6px;
+  gap: 12.72px;
+
+  @include md {
+    padding: 20px 20px 60px 20px;
+    gap: 24px;
+  }
+}
+
+#game-board > picture:nth-of-type(2) {
+  z-index: 0;
 }
