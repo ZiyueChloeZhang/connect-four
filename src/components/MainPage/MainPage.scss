@@ -168,13 +168,7 @@ main {
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(6, 1fr);
   box-sizing: border-box;
-  span {
-    display: block;
-    position: relative;
-    picture {
-      position: absolute;
-    }
-  }
+
   padding: 10.62px 10.6px 32px 10.6px;
   gap: 12.72px;
 
