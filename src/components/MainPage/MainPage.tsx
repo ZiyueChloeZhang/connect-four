@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import connectFourLogo from '../../assets/logo.svg';
 import playerOneIcon from '../../assets/player-one.svg';
 import playerTwoIcon from '../../assets/player-two.svg';
@@ -6,7 +6,7 @@ import boardLayerWhiteLarge from '../../assets/board-layer-white-large.svg';
 import boardLayerWhiteSmall from '../../assets/board-layer-white-small.svg';
 import boardLayerBlackLarge from '../../assets/board-layer-black-large.svg';
 import boardLayerBlackSmall from '../../assets/board-layer-black-small.svg';
-import { drop, flatten, togglePlayer } from '../../shared/helpers';
+import { drop, flatten, renderBoard, togglePlayer } from '../../shared/helpers';
 import { PlayerId, PlayerScores, CellValue, EMPTY_BOARD } from '../../shared/interfaces';
 import BoardCell from '../BoardCell/BoardCell';
 
@@ -66,6 +66,8 @@ function inGameStateReducer(inGameState: InGameState, action: InGameStateAction)
 
 const MainPage: React.FC<MainPageProps> = ({ pause, restart }) => {
     const [{ board, currentPlayer, playerScores, timer }, dispatch] = useReducer(inGameStateReducer, initialInGameState);
+
+    useEffect(() => { console.log(renderBoard(board)) }, [board])
 
     return (
         <>
