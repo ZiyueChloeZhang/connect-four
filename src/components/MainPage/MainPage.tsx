@@ -65,15 +65,15 @@ function inGameStateReducer(inGameState: InGameState, action: InGameStateAction)
 }
 
 const MainPage: React.FC<MainPageProps> = ({ pause, restart }) => {
-    const [inGameState, dispatchInGameState] = useReducer(inGameStateReducer, initialInGameState);
-    const { board, currentPlayer, playerScores, timer } = inGameState;
+    const [{ board, currentPlayer, playerScores, timer }, dispatch] = useReducer(inGameStateReducer, initialInGameState);
 
     return (
         <>
             <nav>
                 <button className='toolBtn' onClick={pause}>menu</button>
                 <img src={connectFourLogo} alt="connect four logo" id='logo' />
-                <button className='toolBtn' onClick={restart}>restart</button>
+                {/* <button className='toolBtn' onClick={restart}>restart</button> */}
+                <button className='toolBtn' onClick={() => dispatch({ type: 'DROP', columnIndex: Math.floor(Math.random() * 7) })}>FUN</button>
             </nav>
             <main>
                 <div className='score-board'>
@@ -89,7 +89,7 @@ const MainPage: React.FC<MainPageProps> = ({ pause, restart }) => {
                         <img src={boardLayerWhiteSmall} alt="board layer white" />
                     </picture>
                     <div id='virtual-board'>
-                        {flatten(EMPTY_BOARD).map(({ row, col, value }, index) => (<BoardCell key={index} rowNum={row} colNum={col} cellValue={value} />))}
+                        {flatten(board).map(({ row, col, value }, index) => (<BoardCell key={index} rowNum={row} colNum={col} cellValue={value} />))}
                     </div>
                     <picture>
                         <source media="(min-width:768px)" srcSet={boardLayerBlackLarge} />

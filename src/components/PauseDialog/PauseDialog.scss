@@ -5,6 +5,7 @@
   position: fixed;
   inset: 0;
   height: fit-content;
+  z-index: 999;
 
   h1 {
     @include heading-l;

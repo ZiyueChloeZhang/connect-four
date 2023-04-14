@@ -40,7 +40,7 @@ function gameStateReducer(gameState: GameState, action: GameStateAction): GameSt
 function App() {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
 
-  const initialGameState: GameState = 'IN_GAME';
+  const initialGameState: GameState = 'IDLE';
   const [gameState, dispatchGameState] = useReducer(gameStateReducer, initialGameState);
 
   return (
