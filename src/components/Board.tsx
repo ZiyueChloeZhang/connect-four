@@ -21,8 +21,6 @@ const VirtualColumns = () => {
     const [selectedColumn, setSelectedColumn] = useState(0);
 
     useEffect(() => {
-        console.log(selectedColumn);
-
         function keyDownHandler({key}: KeyboardEvent) {
             if (key === "ArrowRight") {
                 setSelectedColumn((curr) => (curr === 6) ? 0 : curr + 1);

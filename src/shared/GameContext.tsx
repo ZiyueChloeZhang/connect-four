@@ -45,9 +45,14 @@ const gameStateReducer = (gameState: GameState, action: GameAction): GameState =
         }
         case "DROP": {
             const {columnIndex} = action;
+            console.log(board);
+            console.log(currentPlayer);
+            console.log(columnIndex);
+            const updatedBoard = drop(board, currentPlayer, columnIndex);
+            console.log(updatedBoard);
             return {
                 ...gameState,
-                board: drop(board, currentPlayer, columnIndex),
+                board: updatedBoard,
                 currentPlayer: togglePlayer(currentPlayer),
                 // TODO reset timer
                 // TODO checkWin
