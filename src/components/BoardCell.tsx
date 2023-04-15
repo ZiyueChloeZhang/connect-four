@@ -1,9 +1,9 @@
 import React from 'react'
-import {CellValue} from '../shared/interfaces'
 import counterRedLarge from '../assets/counter-red-large.svg';
 import counterYellowLarge from '../assets/counter-yellow-large.svg';
 import counterRedSmall from '../assets/counter-red-small.svg';
 import counterYellowSmall from '../assets/counter-yellow-small.svg';
+import { CellValue } from "../shared/GameContext";
 
 type BoardCellProps = {
     cellValue: CellValue

@@ -1,21 +1,27 @@
-import {Dialog} from '@headlessui/react'
+import { Dialog } from '@headlessui/react'
+import { useGameDispatch, useGameState } from "../shared/GameContext";
+import { FC } from "react";
 
-type PauseDialogProps = {
-    isOpen: boolean,
-    continueGame: () => void,
-    restart: () => void,
-    quit: () => void
-}
+const PauseDialog: FC<{ restart: () => void }> = ({restart}) => {
+    const {status} = useGameState();
+    const dispatch = useGameDispatch();
 
-const PauseDialog: React.FC<PauseDialogProps> = ({isOpen, continueGame, restart, quit}) => {
+    function continueGame() {
+        dispatch({type: "CONTINUE"});
+    }
+
+    function quitGame() {
+        dispatch({type: "QUIT"});
+    }
+
     return (
-        <Dialog open={isOpen} onClose={continueGame}>
+        <Dialog open={status === "PAUSED"} onClose={continueGame}>
             <Dialog.Panel className='menu-container' id='pause-dialog'>
                 <h1>PAUSE</h1>
                 <div>
                     <button onClick={continueGame}>continue game</button>
                     <button onClick={restart}>restart</button>
-                    <button className="pinkBtn" onClick={quit}>quit game</button>
+                    <button className="pinkBtn" onClick={quitGame}>quit game</button>
                 </div>
             </Dialog.Panel>
         </Dialog>

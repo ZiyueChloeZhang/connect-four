@@ -1,4 +1,4 @@
-import { CellValue, PlayerId } from "./interfaces";
+import { CellValue, PlayerId } from "./GameContext";
 
 export function drop(board: CellValue[][], currentPlayer: PlayerId, columnIndex: number): CellValue[][] {
     if (columnIndex > 6) {

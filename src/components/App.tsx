@@ -1,80 +1,15 @@
-import {useReducer, useState} from 'react'
-import RuleDialog from './RuleDialog';
 import MainMenu from './MainMenu';
 import MainPage from './MainPage';
-import PauseDialog from './PauseDialog';
-
-// state
-type GameState = 'IDLE' | 'IN_GAME' | 'PAUSED';
-
-// actions
-type GameStateActionType = 'START' | 'RESTART' | 'PAUSE' | 'CONTINUE' | 'QUIT';
-type GameStateAction = {
-    type: GameStateActionType
-}
-
-// reducer
-function gameStateReducer(gameState: GameState, action: GameStateAction): GameState {
-    const validTransitions: { [key in GameStateActionType]: GameState[] } = {
-        'START': ['IDLE'],
-        'RESTART': ['IN_GAME', 'PAUSED'],
-        'CONTINUE': ['PAUSED'],
-        'PAUSE': ['IN_GAME'],
-        'QUIT': ['PAUSED']
-    };
-
-    if (!validTransitions[action.type].includes(gameState)) {
-        console.error(`invalid action:${action.type} state:${gameState}`);
-        return gameState;
-    }
-
-    switch (action.type) {
-        case 'START':
-            return 'IN_GAME';
-        case 'RESTART':
-            return 'IN_GAME';
-        case 'CONTINUE':
-            return 'IN_GAME';
-        case 'PAUSE':
-            return 'PAUSED';
-        case 'QUIT':
-            return 'IDLE';
-    }
-}
+import { useGameState } from "../shared/GameContext";
 
 function App() {
-    const [isRulesOpen, setIsRulesOpen] = useState(false);
+    const {status} = useGameState();
+    return <>
+        <div className="App">
+            {(status === 'IDLE') ? <MainMenu/> : <MainPage/>}
+        </div>
+    </>
 
-    const initialGameState: GameState = 'IDLE';
-    const [gameState, dispatchGameState] = useReducer(gameStateReducer, initialGameState);
-
-    return (
-        <>
-            <div className="App">
-                {(gameState === 'IDLE') ? (
-                    <MainMenu
-                        startGame={() => {
-                            dispatchGameState({type: 'START'})
-                        }}
-                        openRules={() => {
-                            setIsRulesOpen(true)
-                        }}/>
-                ) : (
-                    <MainPage
-                        pause={() => dispatchGameState({type: 'PAUSE'})}
-                        restart={() => dispatchGameState({type: 'RESTART'})}
-                    />
-                )
-                }
-            </div>
-            <RuleDialog isOpen={isRulesOpen} closeDialog={() => setIsRulesOpen(false)}/>
-            <PauseDialog
-                isOpen={gameState === 'PAUSED'}
-                continueGame={() => dispatchGameState({type: 'CONTINUE'})}
-                quit={() => dispatchGameState({type: 'QUIT'})}
-                restart={() => dispatchGameState({type: 'RESTART'})}/>
-        </>
-    )
 }
 
 export default App
