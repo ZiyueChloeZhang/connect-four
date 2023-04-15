@@ -1,4 +1,5 @@
 import { createContext, Dispatch, FC, ReactNode, useContext, useReducer } from 'react';
+import { drop, togglePlayer } from "./helpers";
 
 type GameStatus = 'IDLE' | 'IN_GAME' | 'PAUSED';
 export type PlayerId = 1 | 2;
@@ -12,12 +13,13 @@ type GameState = {
     board: CellValue[][]
 }
 
-const initialBoard = Array(7).fill(Array(6).fill(null));
+const initialBoard: CellValue[][] = Array(7).fill(Array(6).fill(null));
+const initialPlayerScores: PlayerScores = {"1": 0, "2": 0};
 const initialGameState: GameState = {
     board: initialBoard,
     currentPlayer: 1,
-    playerScores: {"1": 0, "2": 0},
-    status: "IN_GAME",
+    playerScores: initialPlayerScores,
+    status: "IDLE",
     timer: 30
 }
 
@@ -31,19 +33,74 @@ type GameAction = GameStatusAction
     | { type: "DROP", columnIndex: number }
     | { type: "TIME-OFF" }
 
-const gameStateReducer = (gameState: GameState, action: GameAction) => {
-    return gameState;
+const gameStateReducer = (gameState: GameState, action: GameAction): GameState => {
+    const {board, currentPlayer, playerScores, status, timer} = gameState;
+    switch (action.type) {
+        case "CONTINUE": {
+            return {
+                ...gameState,
+                status: "IN_GAME"
+                // TODO continue timer
+            }
+        }
+        case "DROP": {
+            const {columnIndex} = action;
+            return {
+                ...gameState,
+                board: drop(board, currentPlayer, columnIndex),
+                currentPlayer: togglePlayer(currentPlayer),
+                // TODO reset timer
+                // TODO checkWin
+            }
+        }
+        case "PAUSE": {
+            return {
+                ...gameState,
+                status: "PAUSED",
+                // TODO pause timer
+            }
+        }
+        case "QUIT": {
+            return initialGameState;
+        }
+        case "RESTART": {
+            return {
+                ...gameState,
+                board: initialBoard,
+                playerScores: initialPlayerScores,
+                status: "IN_GAME",
+                // todo reset timer
+            }
+        }
+        case "START": {
+            return {
+                ...gameState,
+                status: "IN_GAME",
+                // todo start timer
+            }
+        }
+        case "TIME-OFF": {
+            const opponentId = togglePlayer(currentPlayer);
+            const opponentUpdatedScore = playerScores[opponentId] + 1;
+            return {
+                ...gameState,
+                playerScores: {...playerScores, [opponentId]: opponentUpdatedScore},
+                currentPlayer: opponentId,
+                //todo restart timer
+            }
+        }
+        default:
+            return gameState
+    }
 }
 
 
 const GameContext = createContext<GameState>(initialGameState);
 const GameDispatchContext = createContext<Dispatch<GameAction>>(() => {
 });
+
 export const GameProvider: FC<{ children: ReactNode }> = ({children}) => {
-    const [game, dispatch] = useReducer(
-        gameStateReducer,
-        initialGameState
-    );
+    const [game, dispatch] = useReducer(gameStateReducer, initialGameState);
 
     return (
         <GameContext.Provider value={game}>
@@ -62,53 +119,3 @@ export function useGameDispatch() {
     return useContext(GameDispatchContext);
 }
 
-// function inGameStateReducer(inGameState: InGameState, action: InGameStateAction): InGameState {
-//     switch (action.type) {
-//         case 'DROP': {
-//             const {currentPlayer, board} = inGameState;
-//             const {columnIndex} = action;
-//
-//             const updatedBoard = drop(board, currentPlayer, columnIndex);
-//
-//
-//             return {
-//                 ...inGameState,
-//                 board: updatedBoard,
-//                 currentPlayer: togglePlayer(currentPlayer),
-//             }; // TODO remove stub
-//         }
-//
-//         case 'TIME-OFF':
-//
-//         default:
-//             return inGameState;
-//     }
-// }
-
-// function gameStateReducer(gameState: GameState, action: GameStateAction): GameState {
-//     const validTransitions: { [key in GameStateActionType]: GameState[] } = {
-//         'START': ['IDLE'],
-//         'RESTART': ['IN_GAME', 'PAUSED'],
-//         'CONTINUE': ['PAUSED'],
-//         'PAUSE': ['IN_GAME'],
-//         'QUIT': ['PAUSED']
-//     };
-//
-//     if (!validTransitions[action.type].includes(gameState)) {
-//         console.error(`invalid action:${action.type} state:${gameState}`);
-//         return gameState;
-//     }
-//
-//     switch (action.type) {
-//         case 'START':
-//             return 'IN_GAME';
-//         case 'RESTART':
-//             return 'IN_GAME';
-//         case 'CONTINUE':
-//             return 'IN_GAME';
-//         case 'PAUSE':
-//             return 'PAUSED';
-//         case 'QUIT':
-//             return 'IDLE';
-//     }
-// }

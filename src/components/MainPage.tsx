@@ -17,16 +17,17 @@ const MainPage = () => {
     }
 
     function restartGame() {
-        dispatch({
-            type: "RESTART"
-        })
+        dispatch({type: "RESTART"})
+    }
+
+    function pauseGame() {
+        dispatch({type: "PAUSE"});
     }
 
     return (
         <>
             <nav>
-                <button className='toolBtn' onClick={() => {
-                }}>menu
+                <button className='toolBtn' onClick={pauseGame}>menu
                 </button>
                 <img src={connectFourLogo} alt="connect four logo" id='logo'/>
                 <button className='toolBtn' onClick={restartGame}>restart</button>
