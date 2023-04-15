@@ -9,13 +9,6 @@ const MainPage = () => {
     const {board, playerScores} = useGameState();
     const dispatch = useGameDispatch();
 
-    function dropCoin() {
-        dispatch({
-            type: "DROP",
-            columnIndex: Math.floor(Math.random() * 7)
-        })
-    }
-
     function restartGame() {
         dispatch({type: "RESTART"})
     }
