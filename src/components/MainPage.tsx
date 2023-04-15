@@ -31,7 +31,7 @@ const MainPage = () => {
                 </button>
                 <img src={connectFourLogo} alt="connect four logo" id='logo'/>
                 <button className='toolBtn' onClick={restartGame}>restart</button>
-                <button className='toolBtn' onClick={dropCoin}>FUN</button>
+                {/*<button className='toolBtn' onClick={dropCoin}>FUN</button>*/}
             </nav>
             <main>
                 <div className='score-board' id='one'>

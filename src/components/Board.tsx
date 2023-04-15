@@ -4,10 +4,21 @@ import boardLayerBlackLarge from "../assets/board-layer-black-large.svg";
 import boardLayerBlackSmall from "../assets/board-layer-black-small.svg";
 import React, { FC } from "react";
 import BoardCell from "./BoardCell";
-import { CellValue } from "../shared/GameContext";
+import { CellValue, useGameDispatch } from "../shared/GameContext";
 
 type BoardProps = {
     board: CellValue[][],
+}
+
+const VirtualColumn: FC<{ index: number }> = ({index}) => {
+    const dispatch = useGameDispatch();
+
+    function dropCoin() {
+        console.log('clicked')
+        dispatch({type: "DROP", columnIndex: index});
+    }
+
+    return <div className='virtual-column' onClick={dropCoin}/>
 }
 const Board: FC<BoardProps> = ({board}) => {
     return <>
@@ -15,10 +26,13 @@ const Board: FC<BoardProps> = ({board}) => {
             <source media="(min-width:768px)" srcSet={boardLayerWhiteLarge}/>
             <img src={boardLayerWhiteSmall} alt="board layer white"/>
         </picture>
+        <div id='virtual-columns'>
+            {[0, 1, 2, 3, 4, 5, 6].map((i) => (<VirtualColumn key={`virtual-column-${i}`} index={i}/>))}
+        </div>
         <div id='virtual-board'>
-            {board.map((row, colNum) => (
+            {board.map((column, colNum) => (
                 <div key={`column-${colNum}`} className='board-column'>
-                    {row.map((cell, rowNum) => (
+                    {column.map((cell, rowNum) => (
                         <BoardCell key={`row-${rowNum}`} cellValue={cell}/>
                     ))}
                 </div>)

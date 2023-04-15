@@ -35,6 +35,11 @@ main {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   justify-items: center;
+  gap: 50px;
+
+  @include md {
+    gap: 32px;
+  }
 
   @include lg {
     display: flex;
@@ -42,62 +47,4 @@ main {
     margin: 0 auto;
     gap: 60px;
   }
-}
-
-#game-board {
-  position: relative;
-  order: 1;
-  width: 335px;
-  height: 310px;
-  grid-column: span 2;
-
-  @include md {
-    width: 632px;
-    height: 584px;
-  }
-
-  @include lg {
-    order: unset;
-  }
-}
-
-#game-board > * {
-  position: absolute;
-}
-
-#game-board > picture:nth-of-type(1) {
-  z-index: 2;
-}
-
-#game-board > div#virtual-board {
-  z-index: 1;
-  display: grid;
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  padding: 10.62px 10.6px 32px 10.6px;
-
-  grid-template-columns: repeat(7, 1fr);
-
-  @include md {
-    padding: 20px 20px 60px 20px;
-  }
-}
-
-//white panel
-#game-board > div#virtual-board > .board-column {
-  grid-template-rows: repeat(6, 1fr);
-}
-
-:is(.board-column, #game-board > div#virtual-board) {
-  display: grid;
-  gap: 12.72px;
-  @include md {
-    gap: 24px;
-  }
-}
-
-// black panel
-#game-board > picture:nth-of-type(2) {
-  z-index: 0;
 }
