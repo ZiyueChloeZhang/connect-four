@@ -1,18 +1,26 @@
-import { createContext, Dispatch, FC, ReactNode, useContext, useReducer } from 'react';
+import { createContext, Dispatch, FC, ReactNode, useContext, useEffect, useReducer } from 'react';
 import { drop, togglePlayer } from "./helpers";
 
 type GameStatus = 'IDLE' | 'IN_GAME' | 'PAUSED';
 export type PlayerId = 1 | 2;
 type PlayerScores = { [key in PlayerId]: number };
 export type CellValue = null | PlayerId;
+type Timer = {
+    isOn: boolean,
+    timeLeft: number
+}
 type GameState = {
     status: GameStatus
     currentPlayer: PlayerId,
-    timer: number,
+    timer: Timer,
     playerScores: PlayerScores,
     board: CellValue[][]
 }
 
+const initialTimer: Timer = {
+    isOn: false,
+    timeLeft: 5
+}
 const initialBoard: CellValue[][] = Array(7).fill(Array(6).fill(null));
 const initialPlayerScores: PlayerScores = {"1": 0, "2": 0};
 const initialGameState: GameState = {
@@ -20,7 +28,7 @@ const initialGameState: GameState = {
     currentPlayer: 1,
     playerScores: initialPlayerScores,
     status: "IDLE",
-    timer: 30
+    timer: initialTimer
 }
 
 
@@ -29,9 +37,14 @@ type GameStatusAction = {
     type: GameStatusActionType
 }
 
+type TimerActionType = 'TIME-OFF' | "TICK"
+type TimerAction = {
+    type: TimerActionType
+}
+
 type GameAction = GameStatusAction
+    | TimerAction
     | { type: "DROP", columnIndex: number }
-    | { type: "TIME-OFF" }
 
 const gameStateReducer = (gameState: GameState, action: GameAction): GameState => {
     const {board, currentPlayer, playerScores, status, timer} = gameState;
@@ -39,30 +52,34 @@ const gameStateReducer = (gameState: GameState, action: GameAction): GameState =
         case "CONTINUE": {
             return {
                 ...gameState,
-                status: "IN_GAME"
-                // TODO continue timer
+                status: "IN_GAME",
+                timer: {
+                    ...timer,
+                    isOn: true
+                }
             }
         }
         case "DROP": {
             const {columnIndex} = action;
-            console.log(board);
-            console.log(currentPlayer);
-            console.log(columnIndex);
             const updatedBoard = drop(board, currentPlayer, columnIndex);
-            console.log(updatedBoard);
             return {
                 ...gameState,
                 board: updatedBoard,
                 currentPlayer: togglePlayer(currentPlayer),
-                // TODO reset timer
-                // TODO checkWin
+                timer: {
+                    isOn: true,
+                    timeLeft: initialTimer.timeLeft
+                }
             }
         }
         case "PAUSE": {
             return {
                 ...gameState,
                 status: "PAUSED",
-                // TODO pause timer
+                timer: {
+                    ...timer,
+                    isOn: false
+                }
             }
         }
         case "QUIT": {
@@ -74,14 +91,20 @@ const gameStateReducer = (gameState: GameState, action: GameAction): GameState =
                 board: initialBoard,
                 playerScores: initialPlayerScores,
                 status: "IN_GAME",
-                // todo reset timer
+                timer: {
+                    isOn: true,
+                    timeLeft: initialTimer.timeLeft
+                }
             }
         }
         case "START": {
             return {
                 ...gameState,
                 status: "IN_GAME",
-                // todo start timer
+                timer: {
+                    isOn: true,
+                    timeLeft: initialTimer.timeLeft
+                }
             }
         }
         case "TIME-OFF": {
@@ -91,7 +114,19 @@ const gameStateReducer = (gameState: GameState, action: GameAction): GameState =
                 ...gameState,
                 playerScores: {...playerScores, [opponentId]: opponentUpdatedScore},
                 currentPlayer: opponentId,
-                //todo restart timer
+                timer: {
+                    ...timer,
+                    timeLeft: initialTimer.timeLeft
+                }
+            }
+        }
+        case "TICK": {
+            return {
+                ...gameState,
+                timer: {
+                    ...timer,
+                    timeLeft: timer.timeLeft - 1
+                }
             }
         }
         default:
@@ -106,6 +141,17 @@ const GameDispatchContext = createContext<Dispatch<GameAction>>(() => {
 
 export const GameProvider: FC<{ children: ReactNode }> = ({children}) => {
     const [game, dispatch] = useReducer(gameStateReducer, initialGameState);
+    const {timer} = game;
+
+    useEffect(() => {
+        if (timer.isOn) {
+            const interval = setInterval(() => {
+                dispatch({type: "TICK"});
+                if (timer.timeLeft === 1) dispatch({type: "TIME-OFF"});
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [timer]);
 
     return (
         <GameContext.Provider value={game}>
