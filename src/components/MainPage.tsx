@@ -37,7 +37,6 @@ const MainPage = () => {
                     <ScoreBoard score={playerScores[2]} playerId={2}/>
                 </div>
             </main>
-            <footer style={{fontSize: 50}}>{timer.timeLeft}</footer>
             <PauseDialog restart={restartGame}/>
         </>
     )

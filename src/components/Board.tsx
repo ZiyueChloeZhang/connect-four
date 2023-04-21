@@ -7,6 +7,7 @@ import markerYellow from "../assets/marker-yellow.svg";
 import React, { FC, useEffect, useRef, useState } from "react";
 import BoardCell from "./BoardCell";
 import { CellValue, useGameDispatch, useGameState } from "../shared/GameContext";
+import Timer from "./Timer";
 
 type BoardProps = {
     board: CellValue[][],
@@ -87,6 +88,7 @@ const Board: FC<BoardProps> = ({board}) => {
             <source media="(min-width:768px)" srcSet={boardLayerBlackLarge}/>
             <img src={boardLayerBlackSmall} alt="board layer white"/>
         </picture>
+        <Timer/>
     </>;
 }
 
