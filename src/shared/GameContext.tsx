@@ -1,5 +1,5 @@
 import { createContext, Dispatch, FC, ReactNode, useContext, useEffect, useReducer } from 'react';
-import { drop, togglePlayer } from "./helpers";
+import { drop, findConnected, togglePlayer } from "./helpers";
 
 type GameStatus = 'IDLE' | 'IN_GAME' | 'PAUSED';
 export type PlayerId = 1 | 2;
@@ -9,12 +9,17 @@ type Timer = {
     isOn: boolean,
     timeLeft: number
 }
+export type CoinPosition = {
+    col: number,
+    row: number
+}
 type GameState = {
     status: GameStatus
     currentPlayer: PlayerId,
     timer: Timer,
     playerScores: PlayerScores,
-    board: CellValue[][]
+    board: CellValue[][],
+    connectedCoins: CoinPosition[]
 }
 
 const initialTimer: Timer = {
@@ -28,7 +33,8 @@ const initialGameState: GameState = {
     currentPlayer: 1,
     playerScores: initialPlayerScores,
     status: "IDLE",
-    timer: initialTimer
+    timer: initialTimer,
+    connectedCoins: []
 }
 
 
@@ -62,6 +68,8 @@ const gameStateReducer = (gameState: GameState, action: GameAction): GameState =
         case "DROP": {
             const {columnIndex} = action;
             const updatedBoard = drop(board, currentPlayer, columnIndex);
+            const connectedCoins = findConnected(board, columnIndex, currentPlayer);
+            console.log(connectedCoins);
             return {
                 ...gameState,
                 board: updatedBoard,
@@ -69,7 +77,8 @@ const gameStateReducer = (gameState: GameState, action: GameAction): GameState =
                 timer: {
                     isOn: true,
                     timeLeft: initialTimer.timeLeft
-                }
+                },
+                connectedCoins: connectedCoins
             }
         }
         case "PAUSE": {
