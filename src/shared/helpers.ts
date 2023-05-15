@@ -30,7 +30,7 @@ export function togglePlayer(currentPlayer: PlayerId): PlayerId {
     return (currentPlayer === 1) ? 2 : 1;
 }
 
-export function findConnected(board: CellValue[][], columnIndex: number, coin: PlayerId): CoinPosition[] {
+export function findConnected(board: CellValue[][], columnIndex: number): CoinPosition[] {
     // check column
     const column = board[columnIndex];
     const rowIndex = findRowIndexToDropInto(column);
@@ -91,6 +91,6 @@ export const getDiagnalUp = (board: CellValue[][], coinPos: CoinPosition) => {
     return true;
 }
 
-export const sum = (a: number, b: number) => {
-    return a + b;
+export const checkVertically = (board: CellValue[][], columnIndex: number) => {
+    for (let r = 0; r < board.length; )
 }

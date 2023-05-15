@@ -27,7 +27,7 @@ const initialTimer: Timer = {
     timeLeft: 5
 }
 const initialBoard: CellValue[][] = Array(7).fill(Array(6).fill(null));
-const initialPlayerScores: PlayerScores = {"1": 0, "2": 0};
+const initialPlayerScores: PlayerScores = { "1": 0, "2": 0 };
 const initialGameState: GameState = {
     board: initialBoard,
     currentPlayer: 1,
@@ -53,7 +53,7 @@ type GameAction = GameStatusAction
     | { type: "DROP", columnIndex: number }
 
 const gameStateReducer = (gameState: GameState, action: GameAction): GameState => {
-    const {board, currentPlayer, playerScores, status, timer} = gameState;
+    const { board, currentPlayer, playerScores, status, timer } = gameState;
     switch (action.type) {
         case "CONTINUE": {
             return {
@@ -66,7 +66,7 @@ const gameStateReducer = (gameState: GameState, action: GameAction): GameState =
             }
         }
         case "DROP": {
-            const {columnIndex} = action;
+            const { columnIndex } = action;
             const updatedBoard = drop(board, currentPlayer, columnIndex);
             const connectedCoins = findConnected(board, columnIndex, currentPlayer);
             console.log(connectedCoins);
@@ -121,7 +121,7 @@ const gameStateReducer = (gameState: GameState, action: GameAction): GameState =
             const opponentUpdatedScore = playerScores[opponentId] + 1;
             return {
                 ...gameState,
-                playerScores: {...playerScores, [opponentId]: opponentUpdatedScore},
+                playerScores: { ...playerScores, [opponentId]: opponentUpdatedScore },
                 currentPlayer: opponentId,
                 timer: {
                     ...timer,
@@ -148,15 +148,15 @@ const GameContext = createContext<GameState>(initialGameState);
 const GameDispatchContext = createContext<Dispatch<GameAction>>(() => {
 });
 
-export const GameProvider: FC<{ children: ReactNode }> = ({children}) => {
+export const GameProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [game, dispatch] = useReducer(gameStateReducer, initialGameState);
-    const {timer} = game;
+    const { timer } = game;
 
     useEffect(() => {
         if (timer.isOn) {
             const interval = setInterval(() => {
-                dispatch({type: "TICK"});
-                if (timer.timeLeft === 1) dispatch({type: "TIME-OFF"});
+                dispatch({ type: "TICK" });
+                if (timer.timeLeft === 1) dispatch({ type: "TIME-OFF" });
             }, 1000);
             return () => clearInterval(interval);
         }
