@@ -50,9 +50,17 @@ export const makeAMove = async (color: Color, columnIndex: number, board: Board)
     updatedBoard[columnIndex][lastEmptyRowIndex] = color;
 
     // check win
-    checkWinning(updatedBoard, [columnIndex, lastEmptyRowIndex]);
+    try {
+        const connectedPoistions = await checkWinning(updatedBoard, [columnIndex, lastEmptyRowIndex]);
+    } catch (error) {
+        console.info('no connected fours');
+    }
 
-    return null;
+    return {
+        board: updatedBoard,
+        connectedCellPositions: null,
+        winner: null
+    };
 }
 
 export function getlastEmptyRowIndex(column: Cell[]) {
@@ -83,11 +91,11 @@ export function isColumnValid(column: Cell[]) {
     return column.slice(firstFilledCellIndex - 1).every(x => x !== null);
 }
 
-export function hasConnectedFour(collection: Cell[], index: number) {
+export async function hasConnectedFour(collection: Cell[], index: number) {
     // first in the four
     const first = new Promise<number[]>((resolve, reject) => {
         if (
-            collection[index] !== undefined
+            collection[index]
             && collection[index] === collection[index + 1]
             && collection[index] === collection[index + 2]
             && collection[index] === collection[index + 3]
@@ -101,7 +109,7 @@ export function hasConnectedFour(collection: Cell[], index: number) {
     // second in the four
     const second = new Promise<number[]>((resolve, reject) => {
         if (
-            collection[index] !== undefined
+            collection[index]
             && collection[index - 1] === collection[index]
             && collection[index] === collection[index + 1]
             && collection[index] === collection[index + 2]
@@ -115,7 +123,7 @@ export function hasConnectedFour(collection: Cell[], index: number) {
     // third in the four
     const third = new Promise<number[]>((resolve, reject) => {
         if (
-            collection[index] !== undefined
+            collection[index]
             && collection[index - 2] === collection[index - 1]
             && collection[index - 1] === collection[index]
             && collection[index] === collection[index + 1]
@@ -129,7 +137,7 @@ export function hasConnectedFour(collection: Cell[], index: number) {
     // fourth is the four
     const fourth = new Promise<number[]>((resolve, reject) => {
         if (
-            collection[index] !== undefined
+            collection[index]
             && collection[index - 3] === collection[index - 2]
             && collection[index - 2] === collection[index - 1]
             && collection[index - 1] === collection[index]
@@ -140,29 +148,34 @@ export function hasConnectedFour(collection: Cell[], index: number) {
         }
     });
 
-    return Promise.any([first, second, third, fourth]).catch(() => throw);
+    return Promise.any([first, second, third, fourth])
+        .then((connectedPositions) => connectedPositions);
 }
 
-export const checkVertically = (board: Board, position: CellPosition) => new Promise<CellPosition[]>(async (resolve, reject) => {
+export const verticallyConnectedPositions = (board: Board, position: CellPosition) => new Promise<CellPosition[]>((resolve, reject) => {
     const [col, row] = position;
 
-    return hasConnectedFour(board[col], row).then(
-        ([first, second, third, fourth]) => resolve([[col, first], [col, second], [col, third], [col, fourth]]),
-        () => reject()
-    )
+    return hasConnectedFour(board[col], row)
+        .then(
+            ([first, second, third, fourth]) => resolve([[col, first], [col, second], [col, third], [col, fourth]]),
+        )
+        .catch((reason) => { reject(reason) });
 });
 
-export const checkHorizontally = (board: Board, position: CellPosition) => new Promise<CellPosition[] | null>((resolve, reject) => {
+export const horizontallyConnectedPositions = (board: Board, position: CellPosition) => new Promise<CellPosition[] | null>((resolve, reject) => {
     const [colIndex, rowIndex] = position;
     const row = getRow(board, rowIndex);
 
-    hasConnectedFour(row, colIndex).then(
+    return hasConnectedFour(row, colIndex).then(
         ([first, second, third, fourth]) => resolve([[first, rowIndex], [second, rowIndex], [third, rowIndex], [fourth, rowIndex]])
-    )
+    ).catch((reason) => { reject(reason) })
 });
 
 export function checkWinning(board: Board, position: CellPosition) {
-    return Promise.any([checkVertically(board, position)]);
+    return Promise.any([
+        verticallyConnectedPositions(board, position),
+        horizontallyConnectedPositions(board, position)
+    ]);
 }
 
 export function getRow(board: Board, index: number) {

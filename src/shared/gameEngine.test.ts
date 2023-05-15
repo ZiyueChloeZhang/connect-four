@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { checkHorizontally, makeAMove, Color, getlastEmptyRowIndex, Cell, isColumnFull, isColumnValid, Board, checkVertically, getRow, hasConnectedFour } from './gameEngine';
+import { horizontallyConnectedPositions, makeAMove, getlastEmptyRowIndex, Cell, isColumnFull, isColumnValid, Board, verticallyConnectedPositions, getRow, hasConnectedFour } from './gameEngine';
 
 describe('lastEmptyRowIndex', () => {
     test('empty column should return 5', () => {
@@ -65,10 +65,10 @@ describe('checkVertically', () => {
             [null, null, null, null, null, null], // 5
             [null, null, null, null, null, null], // 6
         ]
-        await expect(checkVertically(board, [0, 2])).resolves.toStrictEqual([[0, 2], [0, 3], [0, 4], [0, 5]]);
+        await expect(verticallyConnectedPositions(board, [0, 2])).resolves.toStrictEqual([[0, 2], [0, 3], [0, 4], [0, 5]]);
     });
 
-    test('discs color does not match, no winning', () => {
+    test('discs color does not match, no winning', async () => {
         const board: Board = [
             //  0   1      2      3     4      5  
             [null, null, 'YELLOW', 'RED', 'RED', 'RED'], // 0
@@ -80,11 +80,7 @@ describe('checkVertically', () => {
             [null, null, null, null, null, null], // 6
         ]
 
-        try {
-            checkVertically(board, [0, 2]);
-        } catch (error) {
-            expect(error).toBeTruthy();
-        }
+        await expect(verticallyConnectedPositions(board, [0, 2])).rejects.toThrow();
     });
 
     test('less than 4 discs, no winning', async () => {
@@ -99,7 +95,7 @@ describe('checkVertically', () => {
             [null, null, null, null, null, null], // 6
         ]
 
-        await expect(checkVertically(board, [0, 3])).resolves.toBe(null);
+        await expect(verticallyConnectedPositions(board, [0, 3])).rejects.toThrow();
     });
 })
 
@@ -115,7 +111,7 @@ describe('checkHorizontally', () => {
             [null, null, null, null, null, null], // 5
             [null, null, null, null, null, null], // 6
         ]
-        await expect(checkHorizontally(board, [0, 0])).resolves.toStrictEqual([[0, 0], [1, 0], [2, 0], [3, 0]]);
+        await expect(horizontallyConnectedPositions(board, [0, 0])).resolves.toStrictEqual([[0, 0], [1, 0], [2, 0], [3, 0]]);
     });
 
     test('discs color does not match, no winning', async () => {
@@ -130,7 +126,7 @@ describe('checkHorizontally', () => {
             [null, null, null, null, null, null], // 6
         ]
 
-        await expect(checkHorizontally(board, [0, 0])).resolves.toBe(null);
+        await expect(horizontallyConnectedPositions(board, [0, 0])).rejects.toThrow();
     });
 
     test('less than 4 discs, no winning', async () => {
@@ -145,7 +141,7 @@ describe('checkHorizontally', () => {
             [null, null, null, null, null, null], // 6
         ]
 
-        await expect(checkVertically(board, [0, 3])).resolves.toBe(null);
+        await expect(horizontallyConnectedPositions(board, [0, 0])).rejects.toThrow();
     });
 })
 
