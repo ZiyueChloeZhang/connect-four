@@ -50,16 +50,19 @@ export const makeAMove = async (color: Color, columnIndex: number, board: Board)
     updatedBoard[columnIndex][lastEmptyRowIndex] = color;
 
     // check win
+    let connectedPositionsRes = null;
+    let winner = null;
     try {
-        const connectedPoistions = await checkWinning(updatedBoard, [columnIndex, lastEmptyRowIndex]);
+        connectedPositionsRes = await connectedPositions(updatedBoard, [columnIndex, lastEmptyRowIndex]);
+        if (connectedPositionsRes) winner = color;
     } catch (error) {
         console.info('no connected fours');
     }
 
     return {
         board: updatedBoard,
-        connectedCellPositions: null,
-        winner: null
+        connectedCellPositions: connectedPositionsRes,
+        winner: winner
     };
 }
 
@@ -171,7 +174,31 @@ export const horizontallyConnectedPositions = (board: Board, position: CellPosit
     ).catch((reason) => { reject(reason) })
 });
 
-export function checkWinning(board: Board, position: CellPosition) {
+export const diagonalTopLeftToBottomRightConnectedPositions = (board: Board, position: CellPosition) => new Promise<CellPosition[] | null>((resolve, reject) => {
+    const [columnIndex, rowIndex] = position;
+    const { collection, index } = getDiagonalTopLeftToBottomRight(board, position);
+
+    return hasConnectedFour(collection, index).then(
+        (indexesInCollection) => {
+            const positionsInBoard = indexesInCollection.map((i) => [columnIndex + i - index, rowIndex + i - index] as CellPosition);
+            resolve(positionsInBoard)
+        })
+        .catch((reason) => { reject(reason) })
+});
+
+export const diagonalBottomLeftToTopRightConnectedPositions = (board: Board, position: CellPosition) => new Promise<CellPosition[] | null>((resolve, reject) => {
+    const [columnIndex, rowIndex] = position;
+    const { collection, index } = getDiagnalBottomLeftToTopRight(board, position);
+
+    return hasConnectedFour(collection, index).then(
+        (indexesInCollection) => {
+            const positionsInBoard = indexesInCollection.map((i) => [columnIndex + i - index, rowIndex - i + index] as CellPosition);
+            resolve(positionsInBoard)
+        })
+        .catch((reason) => { reject(reason) })
+});
+
+export function connectedPositions(board: Board, position: CellPosition) {
     return Promise.any([
         verticallyConnectedPositions(board, position),
         horizontallyConnectedPositions(board, position)
@@ -182,5 +209,77 @@ export function getRow(board: Board, index: number) {
     return board.reduce((row, currColumn) => {
         return [...row, (currColumn[index])];
     }, [])
+}
+
+export function getDiagonalTopLeftToBottomRight(board: Board, pos: CellPosition) {
+    const [colIndex, rowIndex] = pos;
+
+    const left: Cell[] = [];
+    const right: Cell[] = [];
+
+    let col = colIndex;
+    let row = rowIndex;
+    while (0 <= col && 0 <= row) {
+        col--;
+        row--;
+        if (0 <= col && col < 7 && 0 <= row && row < 6) {
+            left.unshift(board[col][row]);
+        }
+    }
+
+    col = colIndex;
+    row = rowIndex;
+    while (col < 7 && row < 6) {
+        col++;
+        row++;
+        if (0 <= col && col < 7 && 0 <= row && row < 6) {
+            right.push(board[col][row]);
+        }
+    }
+
+    return {
+        collection: [
+            ...left,
+            board[colIndex][rowIndex],
+            ...right
+        ],
+        index: left.length
+    }
+}
+
+export function getDiagnalBottomLeftToTopRight(board: Board, pos: CellPosition) {
+    const [colIndex, rowIndex] = pos;
+
+    const left: Cell[] = [];
+    const right: Cell[] = [];
+
+    let col = colIndex;
+    let row = rowIndex;
+    while (0 <= col && 0 <= row) {
+        col--;
+        row++;
+        if (0 <= col && col < 7 && 0 <= row && row < 6) {
+            left.unshift(board[col][row]);
+        }
+    }
+
+    col = colIndex;
+    row = rowIndex;
+    while (col < 7 && row < 6) {
+        col++;
+        row--;
+        if (0 <= col && col < 7 && 0 <= row && row < 6) {
+            right.push(board[col][row]);
+        }
+    }
+
+    return {
+        collection: [
+            ...left,
+            board[colIndex][rowIndex],
+            ...right
+        ],
+        index: left.length
+    }
 }
 
