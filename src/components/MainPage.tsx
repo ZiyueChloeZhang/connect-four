@@ -6,15 +6,15 @@ import PauseDialog from "./PauseDialog";
 import { useGameDispatch, useGameState } from "../shared/GameContext";
 
 const MainPage = () => {
-    const {board, playerScores, timer} = useGameState();
+    const { board, playerScores, timer } = useGameState();
     const dispatch = useGameDispatch();
 
     function restartGame() {
-        dispatch({type: "RESTART"})
+        dispatch({ type: "RESTART" })
     }
 
     function pauseGame() {
-        dispatch({type: "PAUSE"});
+        dispatch({ type: "PAUSE" });
     }
 
     return (
@@ -22,22 +22,22 @@ const MainPage = () => {
             <nav>
                 <button className='toolBtn' onClick={pauseGame}>menu
                 </button>
-                <img src={connectFourLogo} alt="connect four logo" id='logo'/>
+                <img src={connectFourLogo} alt="connect four logo" id='logo' />
                 <button className='toolBtn' onClick={restartGame}>restart</button>
                 {/*<button className='toolBtn' onClick={dropCoin}>FUN</button>*/}
             </nav>
             <main>
                 <div className='score-board' id='one'>
-                    <ScoreBoard score={playerScores[1]} playerId={1}/>
+                    <ScoreBoard score={playerScores["RED"]} playerId={"RED"} />
                 </div>
                 <div id="game-board">
-                    <Board board={board}/>
+                    <Board board={board} />
                 </div>
                 <div className='score-board' id='two'>
-                    <ScoreBoard score={playerScores[2]} playerId={2}/>
+                    <ScoreBoard score={playerScores["YELLOW"]} playerId={"YELLOW"} />
                 </div>
             </main>
-            <PauseDialog restart={restartGame}/>
+            <PauseDialog restart={restartGame} />
         </>
     )
 }
