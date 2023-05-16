@@ -201,7 +201,9 @@ export const diagonalBottomLeftToTopRightConnectedPositions = (board: Board, pos
 export function connectedPositions(board: Board, position: CellPosition) {
     return Promise.any([
         verticallyConnectedPositions(board, position),
-        horizontallyConnectedPositions(board, position)
+        horizontallyConnectedPositions(board, position),
+        diagonalBottomLeftToTopRightConnectedPositions(board, position),
+        diagonalTopLeftToBottomRightConnectedPositions(board, position)
     ]);
 }
 
