@@ -3,22 +3,12 @@ import { z } from "zod";
 const color = z.enum(["RED", "YELLOW"]);
 export type Color = z.infer<typeof color>;
 
-// a disc is either "red" or "yellow"
-type Disc = Color;
-
-// two players
-const playerSchema = z.object({
-    id: z.string(),
-    color: color
-})
-
 // each board cell can be null, RED or YELLOW
 const cellSchema = color.or(z.null());
 export type Cell = z.infer<typeof cellSchema>;
 
 // a board has 7 columns and 6 rows
 const columnSchema = z.array(cellSchema).length(6).refine(x => isColumnValid(x));
-type Column = z.infer<typeof columnSchema>;
 
 const boardSchema = z.array(columnSchema).length(7);
 export type Board = z.infer<typeof boardSchema>
@@ -27,7 +17,7 @@ const cellPositionSchema = z.tuple([
     z.number().min(0).max(6), // column index
     z.number().min(0).max(5) //  row index
 ]);
-type CellPosition = z.infer<typeof cellPositionSchema>;
+export type CellPosition = z.infer<typeof cellPositionSchema>;
 
 // a game has a board and a current turn
 const gameSchema = z.object({
@@ -38,7 +28,7 @@ const gameSchema = z.object({
     if (winner === null) return connectedCellPositions === null;
     return true;
 })
-type Game = z.infer<typeof gameSchema>;
+export type Game = z.infer<typeof gameSchema>;
 
 
 export const makeAMove = async (color: Color, columnIndex: number, board: Board) => {

@@ -1,10 +1,8 @@
 import { createContext, Dispatch, FC, ReactNode, useContext, useEffect, useReducer } from 'react';
-import { drop, findConnected, togglePlayer } from "./helpers";
+import { Color, Board, Game } from './gameEngine';
 
 type GameStatus = 'IDLE' | 'IN_GAME' | 'PAUSED';
-export type PlayerId = 1 | 2;
-type PlayerScores = { [key in PlayerId]: number };
-export type CellValue = null | PlayerId;
+type PlayerScores = { [key in Color]: number };
 type Timer = {
     isOn: boolean,
     timeLeft: number
@@ -15,26 +13,25 @@ export type CoinPosition = {
 }
 type GameState = {
     status: GameStatus
-    currentPlayer: PlayerId,
+    currentPlayer: Color,
     timer: Timer,
     playerScores: PlayerScores,
-    board: CellValue[][],
-    connectedCoins: CoinPosition[]
-}
+} & Game;
 
 const initialTimer: Timer = {
     isOn: false,
     timeLeft: 5
 }
-const initialBoard: CellValue[][] = Array(7).fill(Array(6).fill(null));
-const initialPlayerScores: PlayerScores = { "1": 0, "2": 0 };
+const initialBoard: Board = Array(7).fill(Array(6).fill(null));
+const initialPlayerScores: PlayerScores = { "RED": 0, "YELLOW": 0 };
 const initialGameState: GameState = {
     board: initialBoard,
-    currentPlayer: 1,
+    currentPlayer: "RED",
     playerScores: initialPlayerScores,
     status: "IDLE",
     timer: initialTimer,
-    connectedCoins: []
+    connectedCellPositions: null,
+    winner: null
 }
 
 
@@ -48,12 +45,12 @@ type TimerAction = {
     type: TimerActionType
 }
 
-type GameAction = GameStatusAction
+export type GameAction = GameStatusAction
     | TimerAction
-    | { type: "DROP", columnIndex: number }
+    | { type: "DROP", payload: Game }
 
 const gameStateReducer = (gameState: GameState, action: GameAction): GameState => {
-    const { board, currentPlayer, playerScores, status, timer } = gameState;
+    const { currentPlayer, playerScores, status, timer } = gameState;
     switch (action.type) {
         case "CONTINUE": {
             return {
@@ -66,19 +63,18 @@ const gameStateReducer = (gameState: GameState, action: GameAction): GameState =
             }
         }
         case "DROP": {
-            const { columnIndex } = action;
-            const updatedBoard = drop(board, currentPlayer, columnIndex);
-            const connectedCoins = findConnected(board, columnIndex, currentPlayer);
-            console.log(connectedCoins);
+            const { board, connectedCellPositions, winner } = action.payload;
             return {
                 ...gameState,
-                board: updatedBoard,
-                currentPlayer: togglePlayer(currentPlayer),
+                board: board,
+                currentPlayer: currentPlayer === "RED" ? "YELLOW" : "RED",
                 timer: {
-                    isOn: true,
+                    isOn: !winner,
                     timeLeft: initialTimer.timeLeft
                 },
-                connectedCoins: connectedCoins
+                connectedCellPositions: connectedCellPositions,
+                winner: winner,
+                status: winner ? "IDLE" : "IN_GAME"
             }
         }
         case "PAUSE": {
@@ -117,12 +113,12 @@ const gameStateReducer = (gameState: GameState, action: GameAction): GameState =
             }
         }
         case "TIME-OFF": {
-            const opponentId = togglePlayer(currentPlayer);
-            const opponentUpdatedScore = playerScores[opponentId] + 1;
+            const opponent = currentPlayer === "RED" ? "YELLOW" : "RED";
+            const opponentUpdatedScore = playerScores[opponent] + 1;
             return {
                 ...gameState,
-                playerScores: { ...playerScores, [opponentId]: opponentUpdatedScore },
-                currentPlayer: opponentId,
+                playerScores: { ...playerScores, [opponent]: opponentUpdatedScore },
+                currentPlayer: opponent,
                 timer: {
                     ...timer,
                     timeLeft: initialTimer.timeLeft

@@ -4,25 +4,26 @@ import boardLayerBlackLarge from "../assets/board-layer-black-large.svg";
 import boardLayerBlackSmall from "../assets/board-layer-black-small.svg";
 import markerRed from "../assets/marker-red.svg";
 import markerYellow from "../assets/marker-yellow.svg";
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { Dispatch, FC, useEffect, useRef, useState } from "react";
 import BoardCell from "./BoardCell";
-import { CellValue, useGameDispatch, useGameState } from "../shared/GameContext";
+import { GameAction, useGameDispatch, useGameState } from "../shared/GameContext";
 import Timer from "./Timer";
+import { Board as BoardType, makeAMove } from "../shared/gameEngine";
 
 type BoardProps = {
-    board: CellValue[][],
+    board: BoardType
 }
 
 const VirtualColumns = () => {
     const dispatch = useGameDispatch();
-    const {currentPlayer} = useGameState();
+    const { currentPlayer, board } = useGameState();
     const columnsRef = useRef(null);
 
     const columns = [0, 1, 2, 3, 4, 5, 6];
     const [selectedColumn, setSelectedColumn] = useState(0);
 
     useEffect(() => {
-        function keyDownHandler({key}: KeyboardEvent) {
+        function keyDownHandler({ key }: KeyboardEvent) {
             if (key === "ArrowRight") {
                 setSelectedColumn((curr) => (curr === 6) ? 0 : curr + 1);
             }
@@ -30,7 +31,7 @@ const VirtualColumns = () => {
                 setSelectedColumn((curr) => (curr === 0) ? 6 : curr - 1);
             }
             if (key === "Enter") {
-                dropCoin(selectedColumn);
+                dropCoin(selectedColumn, board, dispatch);
             }
         }
 
@@ -40,8 +41,13 @@ const VirtualColumns = () => {
         };
     }, [selectedColumn]);
 
-    function dropCoin(index: number) {
-        dispatch({type: "DROP", columnIndex: index});
+    async function dropCoin(index: number, board: BoardType, dispatch: Dispatch<GameAction>) {
+        const { board: updatedBoard, connectedCellPositions, winner } = await makeAMove(currentPlayer, index, board)
+
+        return dispatch({
+            type: "DROP",
+            payload: { board: updatedBoard, connectedCellPositions, winner }
+        });
     }
 
     function selectColumn(index: number) {
@@ -49,46 +55,47 @@ const VirtualColumns = () => {
     }
 
     function renderMarker() {
-        if (currentPlayer === 1) return <img className="marker" src={markerRed} alt="player one marker"/>
-        if (currentPlayer === 2) return <img className="marker" src={markerYellow} alt="player two marker"/>
+        if (currentPlayer === "RED") return <img className="marker" src={markerRed} alt="player one marker" />
+        if (currentPlayer === "YELLOW") return <img className="marker" src={markerYellow} alt="player two marker" />
         return <></>
     }
 
     return <div id='virtual-columns'>
         {columns.map((i) =>
-            (<div
-                key={`column-${i}`}
-                className='virtual-column'
-                onClick={() => dropCoin(selectedColumn)}
-                onMouseOver={() => selectColumn(i)}
-            >
-                {(selectedColumn === i) && renderMarker()}
-            </div>)
+        (<div
+            key={`column-${i}`}
+            className='virtual-column'
+            onClick={() => dropCoin(selectedColumn, board, dispatch)}
+            onMouseOver={() => selectColumn(i)}
+        >
+            {(selectedColumn === i) && renderMarker()}
+        </div>)
         )}
     </div>
 }
-const Board: FC<BoardProps> = ({board}) => {
+
+const Board: FC<BoardProps> = ({ board }) => {
 
     return <>
         <picture>
-            <source media="(min-width:768px)" srcSet={boardLayerWhiteLarge}/>
-            <img src={boardLayerWhiteSmall} alt="board layer white"/>
+            <source media="(min-width:768px)" srcSet={boardLayerWhiteLarge} />
+            <img src={boardLayerWhiteSmall} alt="board layer white" />
         </picture>
-        <VirtualColumns/>
+        <VirtualColumns />
         <div id='virtual-board'>
             {board.map((column, colNum) => (
                 <div key={`column-${colNum}`} className='board-column'>
                     {column.map((cell, rowNum) => (
-                        <BoardCell key={`row-${rowNum}`} cellValue={cell}/>
+                        <BoardCell key={`row-${rowNum}`} cellValue={cell} />
                     ))}
                 </div>)
             )}
         </div>
         <picture>
-            <source media="(min-width:768px)" srcSet={boardLayerBlackLarge}/>
-            <img src={boardLayerBlackSmall} alt="board layer white"/>
+            <source media="(min-width:768px)" srcSet={boardLayerBlackLarge} />
+            <img src={boardLayerBlackSmall} alt="board layer white" />
         </picture>
-        <Timer/>
+        <Timer />
     </>;
 }
 

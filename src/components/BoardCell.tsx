@@ -3,25 +3,25 @@ import counterRedLarge from '../assets/counter-red-large.svg';
 import counterYellowLarge from '../assets/counter-yellow-large.svg';
 import counterRedSmall from '../assets/counter-red-small.svg';
 import counterYellowSmall from '../assets/counter-yellow-small.svg';
-import { CellValue } from "../shared/GameContext";
+import { Cell } from '../shared/gameEngine';
 
 type BoardCellProps = {
-    cellValue: CellValue
+    cellValue: Cell
 }
 
-const BoardCell: React.FC<BoardCellProps> = ({cellValue}) => {
+const BoardCell: React.FC<BoardCellProps> = ({ cellValue }) => {
     return (
         <span className='board-cell' data-aria-valuenow={cellValue}>
-            {(cellValue === 1) && (
+            {(cellValue === "RED") && (
                 <picture>
-                    <source media="(min-width:768px)" srcSet={counterRedLarge}/>
-                    <img src={counterRedSmall} alt="board layer white"/>
+                    <source media="(min-width:768px)" srcSet={counterRedLarge} />
+                    <img src={counterRedSmall} alt="board layer white" />
                 </picture>
             )}
-            {(cellValue === 2) && (
+            {(cellValue === "YELLOW") && (
                 <picture>
-                    <source media="(min-width:768px)" srcSet={counterYellowLarge}/>
-                    <img src={counterYellowSmall} alt="board layer white"/>
+                    <source media="(min-width:768px)" srcSet={counterYellowLarge} />
+                    <img src={counterYellowSmall} alt="board layer white" />
                 </picture>
             )}
         </span>
