@@ -1,5 +1,7 @@
 # Connect Four
 
+PLAY THE GAME HERE: [connect four](https://connect-four-beta.vercel.app/)
+
 ## Overview
 
 Users are able to:
