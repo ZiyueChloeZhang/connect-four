@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import counterRedLarge from '../assets/counter-red-large.svg';
 import counterYellowLarge from '../assets/counter-yellow-large.svg';
 import counterRedSmall from '../assets/counter-red-small.svg';
@@ -11,9 +11,15 @@ type BoardCellProps = {
 }
 
 const BoardCell: React.FC<BoardCellProps> = ({ cellValue, isWinningCell }) => {
+    const [isWinningCellsDisplayed, setIsWinningCellsDisplayed] = useState(false);
+
+    function displayWinningCells() {
+        setIsWinningCellsDisplayed(true);
+    }
+
     return (
-        <span className='board-cell' data-aria-valuenow={cellValue}>
-            {isWinningCell && (
+        <span className='board-cell' data-aria-valuenow={cellValue} key={cellValue} onAnimationEnd={displayWinningCells} >
+            {isWinningCellsDisplayed && isWinningCell && (
                 <div className='winning-circle' />
             )}
             {(cellValue === "RED") && (

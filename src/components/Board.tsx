@@ -17,7 +17,7 @@ type BoardProps = {
 
 const VirtualColumns = () => {
     const dispatch = useGameDispatch();
-    const { currentPlayer, board } = useGameState();
+    const { currentPlayer, board, status } = useGameState();
 
     const columns = [0, 1, 2, 3, 4, 5, 6];
     const [selectedColumn, setSelectedColumn] = useState(0);
@@ -42,12 +42,14 @@ const VirtualColumns = () => {
     }, [selectedColumn]);
 
     async function dropCoin(index: number, board: BoardType, dispatch: Dispatch<GameAction>) {
-        const { board: updatedBoard, connectedCellPositions, winner } = await makeAMove(currentPlayer, index, board)
+        if (status === "IN_GAME") {
+            const { board: updatedBoard, connectedCellPositions, winner } = await makeAMove(currentPlayer, index, board)
 
-        return dispatch({
-            type: "DROP",
-            payload: { board: updatedBoard, connectedCellPositions, winner }
-        });
+            return dispatch({
+                type: "DROP",
+                payload: { board: updatedBoard, connectedCellPositions, winner }
+            });
+        }
     }
 
     function selectColumn(index: number) {

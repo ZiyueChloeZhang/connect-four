@@ -7,6 +7,16 @@ span.board-cell {
     left: 50%;
     transform: translate(-50%, 0);
   }
+  animation: drop 500ms ease forwards;
+}
+
+@keyframes drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-500px);
+  }
+  100% {
+  }
 }
 
 .winning-circle {
