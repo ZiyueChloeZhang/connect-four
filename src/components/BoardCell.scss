@@ -8,3 +8,19 @@ span.board-cell {
     transform: translate(-50%, 0);
   }
 }
+
+.winning-circle {
+  border-radius: 50%;
+  height: 75%;
+  width: 75%;
+  box-sizing: border-box;
+  place-self: center;
+  transform: translateY(20%);
+  position: absolute;
+  border: 5px solid white;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 1;
+}

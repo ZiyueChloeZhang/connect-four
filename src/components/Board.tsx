@@ -8,7 +8,8 @@ import React, { Dispatch, FC, useEffect, useRef, useState } from "react";
 import BoardCell from "./BoardCell";
 import { GameAction, useGameDispatch, useGameState } from "../shared/GameContext";
 import Timer from "./Timer";
-import { Board as BoardType, makeAMove } from "../shared/gameEngine";
+import { Board as BoardType, CellPosition, makeAMove } from "../shared/gameEngine";
+import WinningCard from "./WinningCard";
 
 type BoardProps = {
     board: BoardType
@@ -17,7 +18,6 @@ type BoardProps = {
 const VirtualColumns = () => {
     const dispatch = useGameDispatch();
     const { currentPlayer, board } = useGameState();
-    const columnsRef = useRef(null);
 
     const columns = [0, 1, 2, 3, 4, 5, 6];
     const [selectedColumn, setSelectedColumn] = useState(0);
@@ -75,6 +75,7 @@ const VirtualColumns = () => {
 }
 
 const Board: FC<BoardProps> = ({ board }) => {
+    const { connectedCellPositions, status } = useGameState();
 
     return <>
         <picture>
@@ -86,7 +87,8 @@ const Board: FC<BoardProps> = ({ board }) => {
             {board.map((column, colNum) => (
                 <div key={`column-${colNum}`} className='board-column'>
                     {column.map((cell, rowNum) => (
-                        <BoardCell key={`row-${rowNum}`} cellValue={cell} />
+                        <BoardCell key={`row-${rowNum}`} cellValue={cell}
+                            isWinningCell={!!connectedCellPositions && connectedCellPositions.some(([col, row]) => col === colNum && row === rowNum)} />
                     ))}
                 </div>)
             )}
@@ -95,7 +97,9 @@ const Board: FC<BoardProps> = ({ board }) => {
             <source media="(min-width:768px)" srcSet={boardLayerBlackLarge} />
             <img src={boardLayerBlackSmall} alt="board layer white" />
         </picture>
-        <Timer />
+        {(status === "END")
+            ? (<WinningCard />)
+            : (<Timer />)}
     </>;
 }
 

@@ -6,12 +6,16 @@ import counterYellowSmall from '../assets/counter-yellow-small.svg';
 import { Cell } from '../shared/gameEngine';
 
 type BoardCellProps = {
-    cellValue: Cell
+    cellValue: Cell,
+    isWinningCell: boolean
 }
 
-const BoardCell: React.FC<BoardCellProps> = ({ cellValue }) => {
+const BoardCell: React.FC<BoardCellProps> = ({ cellValue, isWinningCell }) => {
     return (
         <span className='board-cell' data-aria-valuenow={cellValue}>
+            {isWinningCell && (
+                <div className='winning-circle' />
+            )}
             {(cellValue === "RED") && (
                 <picture>
                     <source media="(min-width:768px)" srcSet={counterRedLarge} />

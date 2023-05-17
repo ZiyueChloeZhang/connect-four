@@ -1,7 +1,7 @@
 import { createContext, Dispatch, FC, ReactNode, useContext, useEffect, useReducer } from 'react';
 import { Color, Board, Game } from './gameEngine';
 
-type GameStatus = 'IDLE' | 'IN_GAME' | 'PAUSED';
+type GameStatus = 'IDLE' | 'IN_GAME' | 'PAUSED' | 'END';
 type PlayerScores = { [key in Color]: number };
 type Timer = {
     isOn: boolean,
@@ -20,7 +20,7 @@ type GameState = {
 
 const initialTimer: Timer = {
     isOn: false,
-    timeLeft: 5
+    timeLeft: 30
 }
 const initialBoard: Board = Array(7).fill(Array(6).fill(null));
 const initialPlayerScores: PlayerScores = { "RED": 0, "YELLOW": 0 };
@@ -35,7 +35,7 @@ const initialGameState: GameState = {
 }
 
 
-type GameStatusActionType = 'START' | 'RESTART' | 'PAUSE' | 'CONTINUE' | 'QUIT';
+type GameStatusActionType = 'START' | 'RESTART' | 'PAUSE' | 'CONTINUE' | 'QUIT' | 'NEXT_ROUND';
 type GameStatusAction = {
     type: GameStatusActionType
 }
@@ -74,7 +74,10 @@ const gameStateReducer = (gameState: GameState, action: GameAction): GameState =
                 },
                 connectedCellPositions: connectedCellPositions,
                 winner: winner,
-                status: winner ? "IDLE" : "IN_GAME"
+                status: winner ? "END" : "IN_GAME",
+                playerScores: winner
+                    ? { ...playerScores, [winner]: playerScores[winner] + 1 }
+                    : { ...playerScores }
             }
         }
         case "PAUSE": {
@@ -92,9 +95,7 @@ const gameStateReducer = (gameState: GameState, action: GameAction): GameState =
         }
         case "RESTART": {
             return {
-                ...gameState,
-                board: initialBoard,
-                playerScores: initialPlayerScores,
+                ...initialGameState,
                 status: "IN_GAME",
                 timer: {
                     isOn: true,
@@ -132,6 +133,19 @@ const gameStateReducer = (gameState: GameState, action: GameAction): GameState =
                     ...timer,
                     timeLeft: timer.timeLeft - 1
                 }
+            }
+        }
+        case 'NEXT_ROUND': {
+            return {
+                ...gameState,
+                board: initialBoard,
+                status: "IN_GAME",
+                timer: {
+                    isOn: true,
+                    timeLeft: initialTimer.timeLeft
+                },
+                currentPlayer: currentPlayer === "RED" ? "YELLOW" : "RED",
+                connectedCellPositions: null
             }
         }
         default:

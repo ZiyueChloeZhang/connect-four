@@ -1,0 +1,32 @@
+@import "../sass/mixins";
+@import "../sass/variables";
+@import "../sass/typography";
+
+.winning-card {
+  @include border-shadow;
+  z-index: 4;
+  bottom: 0;
+  left: 50%;
+  right: 50%;
+  transform: translate(-50%, calc(100% - 20px));
+  width: 190px;
+  position: relative;
+  background-color: $white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .player-name {
+    @include heading-xs;
+  }
+
+  .wins {
+    @include heading-l;
+  }
+
+  @include md {
+    transform: translate(-50%, calc(100% - 40px));
+  }
+}

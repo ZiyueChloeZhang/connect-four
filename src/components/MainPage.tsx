@@ -6,7 +6,7 @@ import PauseDialog from "./PauseDialog";
 import { useGameDispatch, useGameState } from "../shared/GameContext";
 
 const MainPage = () => {
-    const { board, playerScores, timer } = useGameState();
+    const { board, playerScores } = useGameState();
     const dispatch = useGameDispatch();
 
     function restartGame() {
